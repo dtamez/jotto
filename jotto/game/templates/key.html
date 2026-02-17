@@ -1,0 +1,7 @@
+<button id="k_{{ letter }}"
+        hx-target="#k_{{ letter }}"
+        hx-swap="outerHTML"
+        hx-trigger="click"
+        hx-get="/keyboard_clicked"
+        hx-vals='{"letter": "{{ letter }}"}'
+        class="key highlight-{{ color }}">{{ letter }}</button>

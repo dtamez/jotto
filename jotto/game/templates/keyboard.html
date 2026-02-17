@@ -1,0 +1,37 @@
+<div class="flex flex-col items-center w-full max-w-md mx-auto space-y-2">
+  <!-- First Row -->
+  <div class="flex gap-2">
+    {% for letter, color in row_1 %}
+      <button id="k_{{ letter }}"
+              hx-target="#k_{{ letter }}"
+              hx-swap="outerHTML"
+              hx-get="/keyboard_clicked"
+              hx-vals='{"letter": "{{ letter }}"}'
+              class="key highlight-{{ color }}">{{ letter }}</button>
+    {% endfor %}
+  </div>
+  <!-- Second Row -->
+  <div class="flex gap-2">
+    {% for letter, color in row_2 %}
+      <button id="k_{{ letter }}"
+              hx-target="#k_{{ letter }}"
+              hx-swap="outerHTML"
+              hx-get="/keyboard_clicked"
+              hx-vals='{"letter": "{{ letter }}"}'
+              class="key highlight-{{ color }}">{{ letter }}</button>
+    {% endfor %}
+  </div>
+  <!-- Third Row -->
+  <div class="flex gap-2">
+    <button id="k_BS" class="key w-16">⟵</button>
+    {% for letter, color in row_3 %}
+      <button id="k_{{ letter }}"
+              hx-target="#k_{{ letter }}"
+              hx-swap="outerHTML"
+              hx-get="/keyboard_clicked"
+              hx-vals='{"letter": "{{ letter }}"}'
+              class="key highlight-{{ color }}">{{ letter }}</button>
+    {% endfor %}
+    <button id="k_ENTER" class="btn btn-lg highlight-green w-16">↵</button>
+  </div>
+</div>

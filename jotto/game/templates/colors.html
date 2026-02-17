@@ -1,0 +1,25 @@
+<div id="colors"
+     class="flex justify-center w-full max-w-md mx-auto gap-4 h-10">
+  <div class="flex flex-col items-center justify-center">Select Color to Add Notes</div>
+  <div class="flex flex-col items-center">
+    <div hx-target="#colors"
+         hx-get="color_clicked"
+         hx-swap="outerHTML"
+         hx-vals='{"color": "green"}'
+         class="{{ green_class }} highlight-green"></div>
+  </div>
+  <div class="flex flex-col items-center">
+    <div hx-target="#colors"
+         hx-get="color_clicked"
+         hx-swap="outerHTML"
+         hx-vals='{"color": "yellow"}'
+         class="{{ yellow_class }} highlight-yellow"></div>
+  </div>
+  <div class="flex flex-col items-center">
+    <div hx-target="#colors"
+         hx-get="color_clicked"
+         hx-swap="outerHTML"
+         hx-vals='{"color": "red"}'
+         class="{{ red_class }} highlight-red"></div>
+  </div>
+</div>

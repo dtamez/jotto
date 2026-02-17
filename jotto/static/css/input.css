@@ -4,3 +4,39 @@
 @source not "./daisyui{,*}.mjs";
 
 @plugin "./daisyui.mjs";
+
+.highlight-green {
+  @apply !bg-green-500;
+}
+
+.highlight-yellow {
+  @apply !bg-yellow-500;
+}
+
+.highlight-red {
+  @apply !bg-red-500;
+}
+
+.key {
+  @apply btn btn-lg btn-outline;
+}
+
+.guess {
+  @apply btn btn-outline w-12 h-12 text-xl font-bold;
+}
+
+.tile {
+  @apply w-12 h-12 border border-gray-400 rounded flex items-center justify-center text-xl font-bold bg-white text-gray-800;
+}
+
+.eval {
+  @apply badge w-12 h-12 rounded;
+}
+
+.color-selected {
+  @apply btn w-10 h-10;
+}
+
+.color-deselected {
+  @apply btn w-8 h-8;
+}
