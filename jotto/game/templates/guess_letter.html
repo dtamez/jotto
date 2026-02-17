@@ -1,0 +1,6 @@
+<div id="{{ id }}"
+     hx-target="#{{ id }}"
+     hx-swap="outerHTML"
+     hx-get="/guess_letter_clicked"
+     hx-vals='{"letter": "{{ letter }}"}'
+     class="guess highlight-{{ color }}">{{ letter }}</div>
