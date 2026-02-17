@@ -1,0 +1,13 @@
+{% load django_htmx %}
+<!DOCTYPE>
+<html>
+  {% load static %}
+  <head>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    {% htmx_script %}
+  </head>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    {% block content %}
+    {% endblock content %}
+  </body>
+</html>
