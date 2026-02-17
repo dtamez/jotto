@@ -1,7 +1,7 @@
-<div class="flex justify-center w-full max-w-md mx-auto gap-2">
-  <div class="tile"></div>
-  <div class="tile"></div>
-  <div class="tile"></div>
-  <div class="tile"></div>
-  <div class="tile"></div>
+<div id="input" class="flex justify-center w-full max-w-md mx-auto gap-2">
+  {% for letter in guess %}
+    <div class="tile">
+      {{ letter }}
+    </div>
+  {% endfor %}
 </div>

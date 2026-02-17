@@ -3,35 +3,49 @@
   <div class="flex gap-2">
     {% for letter, color in row_1 %}
       <button id="k_{{ letter }}"
-              hx-target="#k_{{ letter }}"
+              {% if mode == 'input' %} hx-target="#input" {% else %} hx-target="#k_{{ letter }}" {% endif %}
               hx-swap="outerHTML"
               hx-get="/keyboard_clicked"
               hx-vals='{"letter": "{{ letter }}"}'
-              class="key highlight-{{ color }}">{{ letter }}</button>
+              class="key highlight-{{ color }}">
+        {{ letter }}
+      </button>
     {% endfor %}
   </div>
   <!-- Second Row -->
   <div class="flex gap-2">
     {% for letter, color in row_2 %}
       <button id="k_{{ letter }}"
-              hx-target="#k_{{ letter }}"
+              {% if mode == 'input' %} hx-target="#input" {% else %} hx-target="#k_{{ letter }}" {% endif %}
               hx-swap="outerHTML"
               hx-get="/keyboard_clicked"
               hx-vals='{"letter": "{{ letter }}"}'
-              class="key highlight-{{ color }}">{{ letter }}</button>
+              class="key highlight-{{ color }}">
+        {{ letter }}
+      </button>
     {% endfor %}
   </div>
   <!-- Third Row -->
   <div class="flex gap-2">
-    <button id="k_BS" class="key w-16">⟵</button>
+    <button {% if mode == 'input' %} hx-target="#input" hx-swap="outerHTML" hx-get="/backspace_clicked"   {% endif %}
+            id="k_BS"
+            class="key w-16">
+      ⟵
+    </button>
     {% for letter, color in row_3 %}
       <button id="k_{{ letter }}"
-              hx-target="#k_{{ letter }}"
+              {% if mode == 'input' %} hx-target="#input" {% else %} hx-target="#k_{{ letter }}" {% endif %}
               hx-swap="outerHTML"
               hx-get="/keyboard_clicked"
               hx-vals='{"letter": "{{ letter }}"}'
-              class="key highlight-{{ color }}">{{ letter }}</button>
+              class="key highlight-{{ color }}">
+        {{ letter }}
+      </button>
     {% endfor %}
-    <button id="k_ENTER" class="btn btn-lg highlight-green w-16">↵</button>
+    <button {% if mode == 'input' %} hx-target='#game-root' hx-swap="outerHTML" hx-get="/enter_clicked" {% endif %}
+            id="k_ENTER"
+            class="btn btn-lg highlight-green w-16">
+      ↵
+    </button>
   </div>
 </div>

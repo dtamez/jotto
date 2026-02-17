@@ -1,3 +1,5 @@
+import ipdb
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.cache import cache
 from dataclasses import dataclass
@@ -21,12 +23,15 @@ class Guess:
     eval: Eval
 
 
-def home(request):
-    ctx = {}
+def gen_secret_word():
+    return "pizza"
 
-    # guesses list
-    guesses = cache.get("guesses")
 
+def evaluate_guess(guess):
+    return Eval(1, 3)
+
+
+def populate_keyboard(ctx):
     # keyboard
     row_1, row_2, row_3 = [], [], []
     for letter in "QWERTYUIOP":
@@ -35,14 +40,13 @@ def home(request):
         row_2.append((letter, cache.get(f"k_{letter}_color")))
     for letter in "ZXCVBNM":
         row_3.append((letter, cache.get(f"k_{letter}_color")))
-    ctx = {
-        "guesses": guesses,
-        "row_1": row_1,
-        "row_2": row_2,
-        "row_3": row_3,
-    }
 
-    # colors
+    ctx["row_1"] = row_1
+    ctx["row_2"] = row_2
+    ctx["row_3"] = row_3
+
+
+def populate_colors(ctx):
     color = cache.get("color")
     ctx["green_class"] = "color-deselected"
     ctx["yellow_class"] = "color-deselected"
@@ -54,6 +58,33 @@ def home(request):
             ctx["yellow_class"] = "color-selected"
         elif color == "red":
             ctx["red_class"] = "color-selected"
+    else:
+        ctx["mode"] = "input"
+
+
+def home(request):
+    ctx = {}
+
+    # secret word
+    secret_word = cache.get("secret_word")
+    if not secret_word:
+        secret_word = gen_secret_word()
+        cache.set("secret_word", secret_word)
+
+    # guesses list
+    guesses = cache.get("guesses")
+    ctx["guesses"] = guesses
+
+    # input letters
+    current_guess = cache.get("current_guess", "")
+    current_guess = current_guess.ljust(5)
+    ctx["guess"] = current_guess
+
+    # keyboard in context
+    populate_keyboard(ctx)
+
+    # colors in context
+    populate_colors(ctx)
 
     return render(request, "home.html", ctx)
 
@@ -66,6 +97,18 @@ def keyboard_clicked(request):
 
     if not color:
         # input mode
+        ctx["mode"] = "input"
+        # render the current letters added for this guess + the new letter just submitted
+        current_guess = cache.get("current_guess", "")
+        # handle already have 5 letters - return 204
+        if len(current_guess) == 5:
+            return HttpResponse(status=204)
+        current_guess += letter
+        # store the current letters
+        cache.set("current_guess", current_guess)
+        # pad to 5 characters (only for UI)
+        current_guess = current_guess.ljust(5)
+        ctx["guess"] = current_guess
         return render(request, "input.html", ctx)
     else:
         # highlight mode
@@ -81,6 +124,58 @@ def keyboard_clicked(request):
             ctx.update({"color": color})
 
         return render(request, "key.html", ctx)
+
+
+def backspace_clicked(request):
+    current_guess = cache.get("current_guess", "")
+
+    # nothing to do if current guess has no letters
+    if len(current_guess) == 0:
+        return HttpResponse(status=204)
+    # remove the last letter from the guess
+    current_guess = current_guess[0 : len(current_guess) - 1]
+
+    # store current letters
+    cache.set("current_guess", current_guess)
+    # pad to 5 for UI
+    current_guess = current_guess.ljust(5)
+    ctx = {"guess": current_guess}
+
+    return render(request, "input.html", ctx)
+
+
+def enter_clicked(request):
+    current_guess = cache.get("current_guess", "")
+
+    # nothing to do if current guess is not 5 letters
+    if len(current_guess) != 5:
+        return HttpResponse(status=204)
+
+    # score the guess against our secret word
+    eval = evaluate_guess(current_guess)
+    letters = []
+
+    for letter in current_guess:
+        # set the color based on the current keyboard values
+        color = cache.get(f"k_{letter}_color")
+        letters.append(Letter(letter, color))
+
+    guess = Guess(letters, eval)
+    guesses = cache.get("guesses", [])
+    guesses.append(guess)
+
+    ctx = {}
+    cache.set("guesses", guesses)
+    ctx["guesses"] = guesses
+
+    # clear out current guess
+    cache.delete("current_guess")
+    ctx["guess"] = " " * 5
+
+    populate_keyboard(ctx)
+    populate_colors(ctx)
+
+    return render(request, "game.html", ctx)
 
 
 def guess_letter_clicked(request):
@@ -122,9 +217,22 @@ def color_clicked(request):
 
     if color == clicked_color:
         cache.delete("color")
+        ctx["mode"] = "input"
     else:
         selected = f"{clicked_color}_class"
         ctx[selected] = "color-selected"
         cache.set("color", clicked_color)
 
-    return render(request, "colors.html", ctx)
+    # guesses list
+    guesses = cache.get("guesses")
+    ctx["guesses"] = guesses
+
+    # input letters
+    current_guess = cache.get("current_guess", "")
+    current_guess = current_guess.ljust(5)
+    ctx["guess"] = current_guess
+
+    # keyboard in context
+    populate_keyboard(ctx)
+
+    return render(request, "game.html", ctx)
