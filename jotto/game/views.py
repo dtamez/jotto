@@ -1,3 +1,4 @@
+import random
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.core.cache import cache
@@ -23,11 +24,31 @@ class Guess:
 
 
 def gen_secret_word():
-    return "pizza"
+    with open("jotto_words.txt", "r") as words:
+        secret = random.choice(words.readlines())
+        secret = secret.strip()
+        return secret
 
 
-def evaluate_guess(guess):
-    return Eval(1, 3)
+def evaluate_guess(guess: str, secret: str):
+    green = yellow = 0
+    remaining_secret = ""
+    remaining_guess = ""
+    # First calculate greens and skip them when counting yellows
+    for g, s in zip(guess, secret):
+        if g == s:
+            green += 1
+        else:
+            remaining_guess += g
+            remaining_secret += s
+
+    # Next calculate yellow, and keep removing matched letters
+    for ltr in remaining_guess:
+        if ltr in remaining_secret:
+            yellow += 1
+            remaining_secret = remaining_secret.replace(ltr, "", 1)
+
+    return Eval(green, yellow)
 
 
 def populate_keyboard(ctx):
@@ -67,6 +88,7 @@ def home(request):
     # secret word
     secret_word = cache.get("secret_word")
     if not secret_word:
+        __import__("ipdb").set_trace()
         secret_word = gen_secret_word()
         cache.set("secret_word", secret_word)
 
@@ -151,7 +173,8 @@ def enter_clicked(request):
         return HttpResponse(status=204)
 
     # score the guess against our secret word
-    eval = evaluate_guess(current_guess)
+    secret_word = cache.get("secret_word")
+    eval = evaluate_guess(current_guess, secret_word)
     letters = []
 
     for letter in current_guess:

@@ -1,7 +1,11 @@
 <div id="colors"
      class="flex justify-center w-full max-w-md mx-auto gap-4 h-10">
   <div class="flex flex-col items-center justify-center">
-    Select Color to Add Notes
+    {% if mode == 'input' %}
+      Select Color to Add Notes
+    {% else %}
+      Deselect Color to Input Guess
+    {% endif %}
   </div>
   <div class="flex flex-col items-center">
     <div hx-target="#game-root"

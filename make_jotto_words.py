@@ -24,7 +24,7 @@ def main():
             "w",
         ) as jotto:
             for word in orig.readlines():
-                word = str.lower(word)
+                word = str.upper(word)
                 if is_valid_jotto_word(word):
                     jotto.write(word)
 
