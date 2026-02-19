@@ -1,0 +1,11 @@
+<div id="new_game_panel"
+     class="flex justify-center w-full max-w-md mx-auto gap-2">
+  {% if game.status != "playing" %}
+    <button hx-get="/new_game"
+            hx-target="#game-root"
+            hx-swap="outerHTML"
+            class="btn btn-primary">
+      New Game
+    </button>
+  {% endif %}
+</div>

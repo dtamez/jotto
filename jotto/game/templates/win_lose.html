@@ -1,0 +1,11 @@
+<div id="game_status">
+  {% if game.status == "won" %}
+    <div class="bg-green-600 text-white p-4 rounded">
+      🎉 You Win!
+    </div>
+  {% elif game.status == "lost" %}
+    <div class="bg-red-600 text-white p-4 rounded">
+      💀 Game Over
+    </div>
+  {% endif %}
+</div>

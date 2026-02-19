@@ -11,4 +11,5 @@ urlpatterns = [
     path(
         "guess_letter_clicked", views.guess_letter_clicked, name="guess_letter_clicked"
     ),
+    path("new_game", views.new_game, name="new_game"),
 ]

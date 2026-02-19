@@ -23,6 +23,12 @@ class Guess:
     eval: Eval
 
 
+@dataclass
+class Game:
+    score: int
+    status: str  # playing, won, lost
+
+
 def gen_secret_word():
     with open("jotto_words.txt", "r") as words:
         secret = random.choice(words.readlines())
@@ -90,6 +96,19 @@ def home(request):
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
 
+    game = cache.get(f"{namespace}:game")
+    if not game:
+        game = Game(100, "playing")
+        cache.set(f"{namespace}:game", game)
+
+    ctx["game"] = game
+
+    populate_all_game_elements(ctx, namespace)
+
+    return render(request, "home.html", ctx)
+
+
+def populate_all_game_elements(ctx, namespace):
     # secret word
     secret_word = cache.get(f"{namespace}:secret_word")
     if not secret_word:
@@ -110,8 +129,6 @@ def home(request):
 
     # colors in context
     populate_colors(ctx, namespace)
-
-    return render(request, "home.html", ctx)
 
 
 def keyboard_clicked(request):
@@ -199,7 +216,19 @@ def enter_clicked(request):
     guesses = cache.get(f"{namespace}:guesses", [])
     guesses.append(guess)
 
+    game = cache.get(f"{namespace}:game")
+    game.score -= 5
+
+    if eval.green == 5:
+        game.status = "won"
+    elif game.score == 0:
+        game.status == "lost"
+
+    cache.set(f"{namespace}:game", game)
+
     ctx = {}
+
+    ctx["game"] = game
     cache.set(f"{namespace}:guesses", guesses)
     ctx["guesses"] = guesses
 
@@ -274,4 +303,27 @@ def color_clicked(request):
     # keyboard in context
     populate_keyboard(ctx, namespace)
 
+    game = cache.get(f"{namespace}:game")
+    ctx["game"] = game
+
     return render(request, "game.html", ctx)
+
+
+def new_game(request):
+    ctx = {}
+
+    if not request.session.session_key:
+        request.session.create()
+    session_id = request.session.session_key
+    namespace = f"game:{session_id}"
+
+    # clear out all keys for this game only
+    cache.delete_pattern(f"{namespace}*")
+
+    game = Game(100, "playing")
+    cache.set(f"{namespace}:game", game)
+    ctx["game"] = game
+
+    populate_all_game_elements(ctx, namespace)
+
+    return render(request, "home.html", ctx)
