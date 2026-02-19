@@ -1,12 +1,13 @@
 <div id="guess_list"
-     class="flex flex-col-reverse space-y-reverse space-y-2 overflow-y-auto max-h-[50vh] scroll-smooth scrollbar-thin">
+     class="flex flex-col space-y-2 overflow-y-auto max-h-[50vh] w-full pb-4 scroll-smooth scrollbar-thin"
+     style="scrollbar-gutter: stable">
   {% for guess in guesses %}
     <div class="flex items-center justify-between w-full max-w-md mx-auto">
       <!-- Guess Tiles -->
       <div class="grid grid-cols-5 gap-2">
         {% for letter in guess.letters %}
-          <div id="guess_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
-               hx-target="#guess_{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"
+          <div id="guess_{{ forloop.parentloop.revcounter0 }}_{{ forloop.counter0 }}"
+               hx-target="#guess_{{ forloop.parentloop.revcounter0 }}_{{ forloop.counter0 }}"
                hx-swap="outerHTML"
                hx-trigger="click"
                hx-get="/guess_letter_clicked"
@@ -27,4 +28,6 @@
       </div>
     </div>
   {% endfor %}
+  <div id="scroll_anchor">
+  </div>
 </div>

@@ -116,8 +116,8 @@ def populate_all_game_elements(ctx, namespace):
         cache.set(f"{namespace}:secret_word", secret_word)
 
     # guesses list
-    guesses = cache.get(f"{namespace}:guesses")
-    ctx["guesses"] = guesses
+    guesses = cache.get(f"{namespace}:guesses", [])
+    ctx["guesses"] = list(reversed(guesses))
 
     # input letters
     current_guess = cache.get(f"{namespace}:current_guess", "")
@@ -222,7 +222,7 @@ def enter_clicked(request):
     if eval.green == 5:
         game.status = "won"
     elif game.score == 0:
-        game.status == "lost"
+        game.status = "lost"
 
     cache.set(f"{namespace}:game", game)
 
@@ -230,7 +230,7 @@ def enter_clicked(request):
 
     ctx["game"] = game
     cache.set(f"{namespace}:guesses", guesses)
-    ctx["guesses"] = guesses
+    ctx["guesses"] = list(reversed(guesses))
 
     # clear out current guess
     cache.delete(f"{namespace}:current_guess")
@@ -293,7 +293,7 @@ def color_clicked(request):
 
     # guesses list
     guesses = cache.get(f"{namespace}:guesses")
-    ctx["guesses"] = guesses
+    ctx["guesses"] = list(reversed(guesses))
 
     # input letters
     current_guess = cache.get(f"{namespace}:current_guess", "")
