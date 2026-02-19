@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     {% htmx_script %}
   </head>
-  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        class="h-[100dvh] overflow-hidden">
     {% block content %}
     {% endblock content %}
   </body>
