@@ -128,5 +128,8 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
+        "TIMEOUT": 60 * 60 * 24,
     }
 }
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
