@@ -12,5 +12,6 @@ wheels/
 # tailwindcss 
 **/tailwindcss
 **/*.mjs
+**/output.css
 
 TODO.md
