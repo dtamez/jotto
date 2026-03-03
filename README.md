@@ -50,6 +50,15 @@ and a backend-owned architecture that scales with complexity.
 
 ---
 
+## Key Technical Decisions
+
+- No SPA framework — avoided duplicating state client-side
+- Redis-backed session storage to demonstrate scalable state handling
+- Incremental HTML updates via HTMX instead of JSON APIs
+- Tailwind + DaisyUI for rapid but consistent styling
+
+---
+
 ## Tech Stack
 
 - Python
