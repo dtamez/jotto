@@ -2,6 +2,8 @@
 
 A server-rendered word game built with Django and HTMX.
 
+![Jotto Screenshot](assets/jotto.png)
+
 This project explores backend-driven UI patterns where application state lives on the server and interactivity is handled through incremental HTML updates instead of a heavy client-side SPA framework.
 
 ---
