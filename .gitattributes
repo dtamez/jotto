@@ -1,0 +1,9 @@
+# Don’t count generated build outputs
+static/css/*.css linguist-generated=true
+static/js/*.js linguist-generated=true
+
+# Or, if you have a specific build artifact:
+static/css/output.css linguist-generated=true
+
+# If you keep vendor libs anywhere:
+static/vendor/** linguist-vendored=true
