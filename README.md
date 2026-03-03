@@ -2,7 +2,9 @@
 
 A server-rendered word game built with Django and HTMX.
 
-![Jotto Screenshot](assets/jotto.png)
+<p align="center">
+  <img src="assets/jotto.png" width="750">
+</p>
 
 This project explores backend-driven UI patterns where application state lives on the server and interactivity is handled through incremental HTML updates instead of a heavy client-side SPA framework.
 
@@ -30,6 +32,21 @@ The goal was to show that modern interactive web applications can be built with 
 - No custom frontend framework
 
 This project emphasizes backend ownership of logic and predictable state transitions.
+
+---
+
+## Why Server-Driven UI?
+
+Modern web development often defaults to heavy client-side frameworks.
+This project explores an alternative approach:
+
+- Business logic lives entirely on the server
+- The browser is a thin rendering layer
+- State transitions are explicit and testable
+- HTMX enables interactivity without duplicating logic client-side
+
+This results in a simpler mental model, fewer synchronization bugs,
+and a backend-owned architecture that scales with complexity.
 
 ---
 
