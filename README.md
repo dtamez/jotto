@@ -65,8 +65,6 @@ and a backend-owned architecture that scales with complexity.
 ```bash
 git clone https://github.com/dtamez/jotto
 cd jotto
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
+uv sync
+source .venv/bin/activate
 python manage.py runserver
