@@ -1,8 +1,9 @@
 import random
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.core.cache import cache
 from dataclasses import dataclass
+
+from django.core.cache import cache
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
 
 
 @dataclass
@@ -29,14 +30,14 @@ class Game:
     status: str  # playing, won, lost
 
 
-def gen_secret_word():
+def gen_secret_word() -> str:
     with open("jotto_words.txt", "r") as words:
         secret = random.choice(words.readlines())
         secret = secret.strip()
         return secret
 
 
-def evaluate_guess(guess: str, secret: str):
+def evaluate_guess(guess: str, secret: str) -> Eval:
     green = yellow = 0
     remaining_secret = ""
     remaining_guess = ""
@@ -57,7 +58,7 @@ def evaluate_guess(guess: str, secret: str):
     return Eval(green, yellow)
 
 
-def populate_keyboard(ctx, namespace):
+def populate_keyboard(ctx: dict, namespace: str) -> None:
     # keyboard
     row_1, row_2, row_3 = [], [], []
     for letter in "QWERTYUIOP":
@@ -72,7 +73,7 @@ def populate_keyboard(ctx, namespace):
     ctx["row_3"] = row_3
 
 
-def populate_colors(ctx, namespace):
+def populate_colors(ctx: dict, namespace: str) -> None:
     color = cache.get(f"{namespace}:color")
     ctx["green_class"] = "color-deselected"
     ctx["yellow_class"] = "color-deselected"
@@ -88,7 +89,7 @@ def populate_colors(ctx, namespace):
         ctx["mode"] = "input"
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     ctx = {}
 
     if not request.session.session_key:
@@ -108,7 +109,7 @@ def home(request):
     return render(request, "home.html", ctx)
 
 
-def populate_all_game_elements(ctx, namespace):
+def populate_all_game_elements(ctx: dict, namespace: str) -> None:
     # secret word
     secret_word = cache.get(f"{namespace}:secret_word")
     if not secret_word:
@@ -131,7 +132,7 @@ def populate_all_game_elements(ctx, namespace):
     populate_colors(ctx, namespace)
 
 
-def keyboard_clicked(request):
+def keyboard_clicked(request: HttpRequest) -> HttpResponse:
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
 
@@ -171,7 +172,7 @@ def keyboard_clicked(request):
         return render(request, "key.html", ctx)
 
 
-def backspace_clicked(request):
+def backspace_clicked(request: HttpRequest) -> HttpResponse:
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
 
@@ -192,7 +193,7 @@ def backspace_clicked(request):
     return render(request, "input.html", ctx)
 
 
-def enter_clicked(request):
+def enter_clicked(request: HttpRequest) -> HttpResponse:
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
     current_guess = cache.get(f"{namespace}:current_guess", "")
@@ -242,7 +243,7 @@ def enter_clicked(request):
     return render(request, "game.html", ctx)
 
 
-def guess_letter_clicked(request):
+def guess_letter_clicked(request: HttpRequest) -> HttpResponse:
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
     guesses = cache.get(f"{namespace}:guesses")
@@ -272,7 +273,7 @@ def guess_letter_clicked(request):
     return render(request, "guess_letter.html", ctx)
 
 
-def color_clicked(request):
+def color_clicked(request: HttpRequest) -> HttpResponse:
     ctx = {}
     session_id = request.session.session_key
     namespace = f"game:{session_id}"
@@ -309,7 +310,7 @@ def color_clicked(request):
     return render(request, "game.html", ctx)
 
 
-def new_game(request):
+def new_game(request: HttpRequest) -> HttpResponse:
     ctx = {}
 
     if not request.session.session_key:

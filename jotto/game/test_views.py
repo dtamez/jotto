@@ -1,7 +1,7 @@
-from .views import Eval, evaluate_guess
+from .views import evaluate_guess
 
 
-def test_eval_no_matches():
+def test_eval_no_matches() -> None:
     secret = "abcde"
     guess = "vwxyz"
 
@@ -11,7 +11,7 @@ def test_eval_no_matches():
     assert eval.yellow == 0
 
 
-def test_eval_5_green():
+def test_eval_5_green() -> None:
     secret = "abcde"
     guess = "abcde"
 
@@ -21,7 +21,7 @@ def test_eval_5_green():
     assert eval.yellow == 0
 
 
-def test_eval_1_green_1_yellow():
+def test_eval_1_green_1_yellow() -> None:
     secret = "award"
     guess = "chair"
 
@@ -31,7 +31,7 @@ def test_eval_1_green_1_yellow():
     assert eval.yellow == 1
 
 
-def test_eval_1_green_2_yellow():
+def test_eval_1_green_2_yellow() -> None:
     secret = "forte"
     guess = "swore"
 
@@ -41,7 +41,7 @@ def test_eval_1_green_2_yellow():
     assert eval.yellow == 2
 
 
-def test_eval_0_green_5_yellow():
+def test_eval_0_green_5_yellow() -> None:
     secret = "tough"
     guess = "ought"
 
